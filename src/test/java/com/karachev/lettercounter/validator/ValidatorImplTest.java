@@ -2,6 +2,7 @@ package com.karachev.lettercounter.validator;
 
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class ValidatorImplTest {
@@ -20,5 +21,10 @@ public class ValidatorImplTest {
         String sentence = "";
         assertThrows(IllegalArgumentException.class, () -> validator.validate(sentence),
                 "Sentence is empty");
+    }
+
+    @Test
+    void validatorShouldNotThrowExceptionIfDividendBelowZero() {
+        assertDoesNotThrow(() -> (validator).validate("hello"));
     }
 }

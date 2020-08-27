@@ -1,5 +1,6 @@
 package com.karachev.lettercounter;
 
+import com.karachev.lettercounter.domain.CacheProvider;
 import com.karachev.lettercounter.provider.CountingProvider;
 import com.karachev.lettercounter.provider.ViewProvider;
 import com.karachev.lettercounter.validator.Validator;
@@ -12,12 +13,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -29,13 +30,14 @@ public class LettersCounterTest {
     private CountingProvider mockedCountingProvider;
     @Mock
     private ViewProvider mockedViewProvider;
+    @Mock
+    private CacheProvider mockedCacheProvider;
     @InjectMocks
     private LettersCounter lettersCounter;
 
     @Test
-    void CountLettersShouldNotUseProviderPackageWhenGettingSameSentenceItShouldReadFromSentenceCache() {
-        String sentence1 = "to be or not to be";
-        String sentence2 = "to be or not to be";
+    void CountLettersShouldReturnStringOfASpecificFormatWhenCacheDoesNotHaveSentence() {
+        String sentence = "to be or not to be";
 
         Map<Character, Integer> lettersCountedInSentence = new LinkedHashMap<>();
         lettersCountedInSentence.put('t', 3);
@@ -46,22 +48,62 @@ public class LettersCounterTest {
         lettersCountedInSentence.put('r', 1);
         lettersCountedInSentence.put('n', 1);
 
-        String view = "\"t\" - 3\n" +
-                "\"o\" - 4\n" +
-                "\" \" - 5\n" +
-                "\"b\" - 2\n" +
-                "\"e\" - 2\n" +
-                "\"r\" - 1\n" +
-                "\"n\" - 1\n";
+        String view = "\"t\" - 3\r\n" +
+                "\"o\" - 4\r\n" +
+                "\" \" - 5\r\n" +
+                "\"b\" - 2\r\n" +
+                "\"e\" - 2\r\n" +
+                "\"r\" - 1\r\n" +
+                "\"n\" - 1\r\n";
 
         doNothing().when(mockedValidator).validate(anyString());
-        when(mockedCountingProvider.provideCounting(anyString()))
+        when(mockedCacheProvider.isValueContains(anyString())).thenReturn(false);
+        when(mockedCountingProvider.provideCounting(anyString(), any()))
                 .thenReturn(lettersCountedInSentence);
         when(mockedViewProvider.provideView(anyMap())).thenReturn(view);
 
-        lettersCounter.countLetters(sentence1);
-        lettersCounter.countLetters(sentence2);
+        lettersCounter.countLetters(sentence);
 
-        verify(mockedCountingProvider, atLeast(1)).provideCounting(anyString());
+        verify(mockedValidator).validate(anyString());
+        verify(mockedCacheProvider).isValueContains(anyString());
+        verify(mockedCountingProvider).provideCounting(anyString(), any());
+        verify(mockedViewProvider).provideView(anyMap());
+
     }
+
+    @Test
+    void CountLettersShouldNotUseCountingProviderPackageWhenGettingSameSentenceItShouldReadFromSentenceCache() {
+        String sentence = "to be or not to be";
+
+        Map<Character, Integer> lettersCountedInSentence = new LinkedHashMap<>();
+        lettersCountedInSentence.put('t', 3);
+        lettersCountedInSentence.put('o', 4);
+        lettersCountedInSentence.put(' ', 5);
+        lettersCountedInSentence.put('b', 2);
+        lettersCountedInSentence.put('e', 2);
+        lettersCountedInSentence.put('r', 1);
+        lettersCountedInSentence.put('n', 1);
+
+        String view = "\"t\" - 3\r\n" +
+                "\"o\" - 4\r\n" +
+                "\" \" - 5\r\n" +
+                "\"b\" - 2\r\n" +
+                "\"e\" - 2\r\n" +
+                "\"r\" - 1\r\n" +
+                "\"n\" - 1\r\n";
+
+        doNothing().when(mockedValidator).validate(anyString());
+        when(mockedCacheProvider.isValueContains(anyString())).thenReturn(true);
+        when(mockedCacheProvider.getLetterCounter(anyString())).thenReturn(lettersCountedInSentence);
+        when(mockedViewProvider.provideView(anyMap())).thenReturn(view);
+
+        lettersCounter.countLetters(sentence);
+
+        verify(mockedValidator).validate(anyString());
+        verify(mockedCacheProvider).isValueContains(anyString());
+        verify(mockedCacheProvider).getLetterCounter(anyString());
+        verifyZeroInteractions(mockedCountingProvider);
+        verify(mockedViewProvider).provideView(anyMap());
+    }
+
 }

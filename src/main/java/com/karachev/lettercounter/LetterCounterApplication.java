@@ -1,5 +1,6 @@
 package com.karachev.lettercounter;
 
+import com.karachev.lettercounter.domain.CacheProvider;
 import com.karachev.lettercounter.provider.CountingProvider;
 import com.karachev.lettercounter.provider.CountingProviderImpl;
 import com.karachev.lettercounter.provider.ViewProvider;
@@ -23,9 +24,10 @@ public class LetterCounterApplication {
         Validator validator = new ValidatorImpl();
         CountingProvider countingProvider = new CountingProviderImpl();
         ViewProvider viewProvider = new ViewProviderImpl();
+        CacheProvider cacheProvider = new CacheProvider();
 
         LettersCounter lettersCounter = new LettersCounter(validator, countingProvider,
-                viewProvider);
+                viewProvider, cacheProvider);
 
         System.out.println(lettersCounter.countLetters(sentence));
     }

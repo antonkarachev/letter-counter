@@ -1,17 +1,17 @@
 package com.karachev.lettercounter.provider;
 
+import com.karachev.lettercounter.domain.CacheProvider;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
-
-import static com.karachev.lettercounter.domain.SentenceCache.saveSentence;
 
 public class CountingProviderImpl implements CountingProvider {
 
     @Override
-    public Map<Character, Integer> provideCounting(String sentence) {
+    public Map<Character, Integer> provideCounting(String sentence, CacheProvider cacheProvider) {
 
         Map<Character, Integer> lettersCountedInSentence = countLetter(sentence);
-        saveSentence(sentence, lettersCountedInSentence);
+        cacheProvider.put(sentence, lettersCountedInSentence);
         return lettersCountedInSentence;
     }
 
@@ -20,14 +20,9 @@ public class CountingProviderImpl implements CountingProvider {
         char[] sentenceInLetters = sentence.toCharArray();
 
         for (int i = 0; i < sentenceInLetters.length; i++) {
-            int sentenceLengthIn = sentence.length();
-            String countingLetter = String.valueOf(sentenceInLetters[i]);
-            int sentenceLengthOut = sentence.replaceAll(countingLetter, "").length();
-            int counter = sentenceLengthIn - sentenceLengthOut;
-            lettersCountedInSentence.put(sentenceInLetters[i], counter);
+            lettersCountedInSentence.merge(sentenceInLetters[i],1, (a,b)->a+b);
         }
 
         return lettersCountedInSentence;
     }
 }
-

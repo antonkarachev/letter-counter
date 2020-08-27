@@ -24,13 +24,13 @@ public class ViewProviderImplTest {
         lettersCountedInSentence.put('r', 1);
         lettersCountedInSentence.put('n', 1);
 
-        String expected = "\"t\" - 3\n" +
-                "\"o\" - 4\n" +
-                "\" \" - 5\n" +
-                "\"b\" - 2\n" +
-                "\"e\" - 2\n" +
-                "\"r\" - 1\n" +
-                "\"n\" - 1\n";
+        String expected = "\"t\" - 3\r\n" +
+                "\"o\" - 4\r\n" +
+                "\" \" - 5\r\n" +
+                "\"b\" - 2\r\n" +
+                "\"e\" - 2\r\n" +
+                "\"r\" - 1\r\n" +
+                "\"n\" - 1\r\n";
 
         String actual = viewProvider.provideView(lettersCountedInSentence);
 
@@ -42,12 +42,11 @@ public class ViewProviderImplTest {
         Map<Character, Integer> lettersCountedInSentence = new LinkedHashMap<>();
         lettersCountedInSentence.put(' ', 10);
 
-        String expected = "\" \" - 10\n";
+        String expected = "\" \" - 10\r\n";
 
         String actual = viewProvider.provideView(lettersCountedInSentence);
 
         assertThat(actual, is(expected));
     }
-
 
 }

@@ -1,5 +1,6 @@
 package com.karachev.lettercounter.provider;
 
+import com.karachev.lettercounter.domain.CacheProvider;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
@@ -11,6 +12,7 @@ import static org.hamcrest.Matchers.is;
 public class CountingProviderImplTest {
 
     private final CountingProvider countingProvider = new CountingProviderImpl();
+    private final CacheProvider cacheProvider = new CacheProvider();
 
     @Test
     void ProvideCountingShouldReturnMapWhenGettingSentenceWithTwoWords() {
@@ -26,7 +28,7 @@ public class CountingProviderImplTest {
         expected.put('!', 1);
 
         Map<Character, Integer> actual =
-                countingProvider.provideCounting("hello world!");
+                countingProvider.provideCounting("hello world!", cacheProvider);
 
         assertThat(actual, is(expected));
     }
@@ -37,7 +39,7 @@ public class CountingProviderImplTest {
         expected.put('h', 10);
 
         Map<Character, Integer> actual =
-                countingProvider.provideCounting("hhhhhhhhhh");
+                countingProvider.provideCounting("hhhhhhhhhh", cacheProvider);
 
         assertThat(actual, is(expected));
     }
@@ -49,7 +51,7 @@ public class CountingProviderImplTest {
         expected.put(' ', 1);
 
         Map<Character, Integer> actual =
-                countingProvider.provideCounting("hhhhhhhhhh hhhhhhhhhh");
+                countingProvider.provideCounting("hhhhhhhhhh hhhhhhhhhh", cacheProvider);
 
         assertThat(actual, is(expected));
     }
@@ -68,7 +70,7 @@ public class CountingProviderImplTest {
         expected.put('!', 1);
 
         Map<Character, Integer> actual =
-                countingProvider.provideCounting("hello world!");
+                countingProvider.provideCounting("hello world!", cacheProvider);
 
         assertThat(actual, is(expected));
     }
