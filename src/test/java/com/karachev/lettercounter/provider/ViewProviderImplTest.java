@@ -9,7 +9,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
 
-public class ViewProviderImplTest {
+class ViewProviderImplTest {
 
     private final ViewProvider viewProvider = new ViewProviderImpl();
 
@@ -31,7 +31,6 @@ public class ViewProviderImplTest {
                 "\"e\" - 2\r\n" +
                 "\"r\" - 1\r\n" +
                 "\"n\" - 1\r\n";
-
         String actual = viewProvider.provideView(lettersCountedInSentence);
 
         assertThat(actual, is(expected));
@@ -41,9 +40,7 @@ public class ViewProviderImplTest {
     void ProvideViewShouldReturnStringWhenGetMapStringIntegerWithOnlyTabulationSymbols() {
         Map<Character, Integer> lettersCountedInSentence = new LinkedHashMap<>();
         lettersCountedInSentence.put(' ', 10);
-
         String expected = "\" \" - 10\r\n";
-
         String actual = viewProvider.provideView(lettersCountedInSentence);
 
         assertThat(actual, is(expected));

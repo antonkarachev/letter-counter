@@ -1,6 +1,6 @@
 package com.karachev.lettercounter;
 
-import com.karachev.lettercounter.domain.CacheProvider;
+import com.karachev.lettercounter.domain.CacheProviderImpl;
 import com.karachev.lettercounter.provider.CountingProvider;
 import com.karachev.lettercounter.provider.ViewProvider;
 import com.karachev.lettercounter.validator.Validator;
@@ -13,27 +13,33 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import static org.mockito.ArgumentMatchers.any;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class LettersCounterTest {
+class SymbolCounterTest {
 
     @Mock
     private Validator mockedValidator;
+
     @Mock
     private CountingProvider mockedCountingProvider;
+
     @Mock
     private ViewProvider mockedViewProvider;
+
     @Mock
-    private CacheProvider mockedCacheProvider;
+    private CacheProviderImpl mockedCacheProviderImpl;
+
     @InjectMocks
-    private LettersCounter lettersCounter;
+    private SymbolCounter symbolCounter;
 
     @Test
     void CountLettersShouldReturnStringOfASpecificFormatWhenCacheDoesNotHaveSentence() {
@@ -57,16 +63,16 @@ public class LettersCounterTest {
                 "\"n\" - 1\r\n";
 
         doNothing().when(mockedValidator).validate(anyString());
-        when(mockedCacheProvider.isValueContains(anyString())).thenReturn(false);
-        when(mockedCountingProvider.provideCounting(anyString(), any()))
+        when(mockedCacheProviderImpl.isValueContains(anyString())).thenReturn(false);
+        when(mockedCountingProvider.provideCounting(anyString()))
                 .thenReturn(lettersCountedInSentence);
         when(mockedViewProvider.provideView(anyMap())).thenReturn(view);
 
-        lettersCounter.countLetters(sentence);
+        symbolCounter.countSymbols(sentence);
 
         verify(mockedValidator).validate(anyString());
-        verify(mockedCacheProvider).isValueContains(anyString());
-        verify(mockedCountingProvider).provideCounting(anyString(), any());
+        verify(mockedCacheProviderImpl).isValueContains(anyString());
+        verify(mockedCountingProvider).provideCounting(anyString());
         verify(mockedViewProvider).provideView(anyMap());
 
     }
@@ -93,17 +99,25 @@ public class LettersCounterTest {
                 "\"n\" - 1\r\n";
 
         doNothing().when(mockedValidator).validate(anyString());
-        when(mockedCacheProvider.isValueContains(anyString())).thenReturn(true);
-        when(mockedCacheProvider.getLetterCounter(anyString())).thenReturn(lettersCountedInSentence);
+        when(mockedCacheProviderImpl.isValueContains(anyString())).thenReturn(true);
+        when(mockedCacheProviderImpl.getLetterCounter(anyString())).thenReturn(lettersCountedInSentence);
         when(mockedViewProvider.provideView(anyMap())).thenReturn(view);
 
-        lettersCounter.countLetters(sentence);
+        symbolCounter.countSymbols(sentence);
 
         verify(mockedValidator).validate(anyString());
-        verify(mockedCacheProvider).isValueContains(anyString());
-        verify(mockedCacheProvider).getLetterCounter(anyString());
+        verify(mockedCacheProviderImpl).isValueContains(anyString());
+        verify(mockedCacheProviderImpl).getLetterCounter(anyString());
         verifyZeroInteractions(mockedCountingProvider);
         verify(mockedViewProvider).provideView(anyMap());
+    }
+
+    @Test
+    void CountLettersShouldNotRunsWhenValidatorThrowsException() {
+        doThrow(new IllegalArgumentException()).when(mockedValidator).validate(anyString());
+        assertThrows(IllegalArgumentException.class, () -> symbolCounter.countSymbols(""));
+        verifyNoMoreInteractions(mockedCacheProviderImpl, mockedCountingProvider,
+                mockedCountingProvider, mockedViewProvider);
     }
 
 }

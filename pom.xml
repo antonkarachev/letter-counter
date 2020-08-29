@@ -22,8 +22,8 @@
         <jacoco.maven.plugin.version>0.8.5</jacoco.maven.plugin.version>
         <mockito.junit.jupiter.version>2.23.0</mockito.junit.jupiter.version>
         <hamcrest.version>2.1</hamcrest.version>
-        <mainClass>com.karachev.lettercounter.LetterCounterApplication</mainClass>
-        <main.class.for.manifest>com.karachev.lettercounter.LetterCounterApplication</main.class.for.manifest>
+        <mainClass>com.karachev.lettercounter.SymbolCounterApplication</mainClass>
+        <main.class.for.manifest>com.karachev.lettercounter.SymbolCounterApplication</main.class.for.manifest>
     </properties>
 
     <dependencies>

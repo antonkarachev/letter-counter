@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class ValidatorImplTest {
+class ValidatorImplTest {
 
     private final Validator validator = new ValidatorImpl();
 
@@ -25,6 +25,6 @@ public class ValidatorImplTest {
 
     @Test
     void validatorShouldNotThrowExceptionIfDividendBelowZero() {
-        assertDoesNotThrow(() -> (validator).validate("hello"));
+        assertDoesNotThrow(() -> validator.validate("hello"));
     }
 }
