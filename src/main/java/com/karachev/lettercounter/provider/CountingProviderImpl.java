@@ -14,9 +14,9 @@ public class CountingProviderImpl implements CountingProvider {
 
     private Map<Character, Integer> countSymbols(String sentence) {
         return sentence.chars()
-                .mapToObj(c -> (char) c)
+                .mapToObj(symbol -> (char) symbol)
                 .collect(Collectors.toMap(Function.identity(),
-                        c -> 1,
+                        counter -> 1,
                         Integer::sum,
                         LinkedHashMap::new));
     }

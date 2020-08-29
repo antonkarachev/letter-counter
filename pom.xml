@@ -55,8 +55,8 @@
                 <version>${jacoco.maven.plugin.version}</version>
                 <configuration>
                     <excludes>
-                        <exclude>**/*LetterCounterApplication.class</exclude>
-                        <exclude>**/*CacheProvider.class</exclude>
+                        <exclude>**/*SymbolCounterApplication.class</exclude>
+                        <exclude>**/domain/**.*</exclude>
                     </excludes>
                 </configuration>
                 <executions>
