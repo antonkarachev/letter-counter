@@ -1,6 +1,6 @@
 package com.karachev.lettercounter;
 
-import com.karachev.lettercounter.domain.CacheProviderImpl;
+import com.karachev.lettercounter.domain.CacheProvider;
 import com.karachev.lettercounter.provider.CountingProvider;
 import com.karachev.lettercounter.provider.ViewProvider;
 import com.karachev.lettercounter.validator.Validator;
@@ -12,25 +12,25 @@ public class SymbolCounter {
     private final Validator validator;
     private final CountingProvider countingProvider;
     private final ViewProvider viewProvider;
-    private final CacheProviderImpl cacheProviderImpl;
+    private final CacheProvider cacheProvider;
 
     public SymbolCounter(Validator validator, CountingProvider countingProvider,
-                         ViewProvider viewProvider, CacheProviderImpl cacheProviderImpl) {
+                         ViewProvider viewProvider, CacheProvider cacheProvider) {
         this.validator = validator;
         this.countingProvider = countingProvider;
         this.viewProvider = viewProvider;
-        this.cacheProviderImpl = cacheProviderImpl;
+        this.cacheProvider = cacheProvider;
     }
 
     public String countSymbols(String sentence) {
         validator.validate(sentence);
         final Map<Character, Integer> symbolToCounter;
 
-        if (cacheProviderImpl.isValueContains(sentence)) {
-            symbolToCounter = cacheProviderImpl.getLetterCounter(sentence);
+        if (cacheProvider.isValueContains(sentence)) {
+            symbolToCounter = cacheProvider.getLetterCounter(sentence);
         } else {
-            symbolToCounter = countingProvider.provideCounting(sentence);
-            cacheProviderImpl.put(sentence, symbolToCounter);
+            symbolToCounter = countingProvider.countSymbols(sentence);
+            cacheProvider.put(sentence, symbolToCounter);
         }
 
         return viewProvider.provideView(symbolToCounter);

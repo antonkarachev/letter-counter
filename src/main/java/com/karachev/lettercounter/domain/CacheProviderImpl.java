@@ -1,10 +1,23 @@
 package com.karachev.lettercounter.domain;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
+
 public class CacheProviderImpl implements CacheProvider {
-    private HashMap<String, Map<Character, Integer>> cache = new HashMap<>();
+    private final int capacity;
+    private final Map<String, Map<Character, Integer>> cache =
+            new LinkedHashMap<String, Map<Character, Integer>>() {
+                @Override
+                protected boolean removeEldestEntry(Map.Entry<String,
+                        Map<Character, Integer>> eldest) {
+                    return size() > capacity;
+                }
+            };
+
+    public CacheProviderImpl(int capacity) {
+        this.capacity = capacity;
+    }
 
     @Override
     public boolean isValueContains(String sentence) {

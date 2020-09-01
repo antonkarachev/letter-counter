@@ -8,13 +8,12 @@ import java.util.Map;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
-
 class ViewProviderImplTest {
 
     private final ViewProvider viewProvider = new ViewProviderImpl();
 
     @Test
-    void ProvideViewShouldReturnStringWhenGetMapStringInteger() {
+    void provideViewShouldReturnStringWhenGetMapStringInteger() {
         Map<Character, Integer> lettersCountedInSentence = new LinkedHashMap<>();
         lettersCountedInSentence.put('t', 3);
         lettersCountedInSentence.put('o', 4);
@@ -37,7 +36,7 @@ class ViewProviderImplTest {
     }
 
     @Test
-    void ProvideViewShouldReturnStringWhenGetMapStringIntegerWithOnlyTabulationSymbols() {
+    void provideViewShouldReturnStringWhenGetMapStringIntegerWithOnlyTabulationSymbols() {
         Map<Character, Integer> lettersCountedInSentence = new LinkedHashMap<>();
         lettersCountedInSentence.put(' ', 10);
         String expected = "\" \" - 10\r\n";

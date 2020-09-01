@@ -1,5 +1,6 @@
 package com.karachev.lettercounter;
 
+import com.karachev.lettercounter.domain.CacheProvider;
 import com.karachev.lettercounter.domain.CacheProviderImpl;
 import com.karachev.lettercounter.provider.CountingProvider;
 import com.karachev.lettercounter.provider.CountingProviderImpl;
@@ -24,10 +25,10 @@ public class SymbolCounterApplication {
         Validator validator = new ValidatorImpl();
         CountingProvider countingProvider = new CountingProviderImpl();
         ViewProvider viewProvider = new ViewProviderImpl();
-        CacheProviderImpl cacheProviderImpl = new CacheProviderImpl();
+        CacheProvider cacheProvider = new CacheProviderImpl(100);
 
         SymbolCounter symbolCounter = new SymbolCounter(validator, countingProvider,
-                viewProvider, cacheProviderImpl);
+                viewProvider, cacheProvider);
 
         System.out.println(symbolCounter.countSymbols(sentence));
     }

@@ -1,6 +1,5 @@
 package com.karachev.lettercounter.provider;
 
-import com.karachev.lettercounter.domain.CacheProviderImpl;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
@@ -12,10 +11,9 @@ import static org.hamcrest.Matchers.is;
 class CountingProviderImplTest {
 
     private final CountingProvider countingProvider = new CountingProviderImpl();
-    private final CacheProviderImpl cacheProviderImpl = new CacheProviderImpl();
 
     @Test
-    void ProvideCountingShouldReturnMapWhenGettingSentenceWithTwoWords() {
+    void provideCountingShouldReturnMapWhenGettingSentenceWithTwoWords() {
         Map<Character, Integer> expected = new HashMap<>();
         expected.put('h', 1);
         expected.put('e', 1);
@@ -28,30 +26,30 @@ class CountingProviderImplTest {
         expected.put('!', 1);
 
         Map<Character, Integer> actual =
-                countingProvider.provideCounting("hello world!");
+                countingProvider.countSymbols("hello world!");
 
         assertThat(actual, is(expected));
     }
 
     @Test
-    void ProvideCountingShouldReturnMapWhenGettingSentenceWithOneWordWithOneRepeatedLetter() {
+    void provideCountingShouldReturnMapWhenGettingSentenceWithOneWordWithOneRepeatedLetter() {
         Map<Character, Integer> expected = new HashMap<>();
         expected.put('h', 10);
 
         Map<Character, Integer> actual =
-                countingProvider.provideCounting("hhhhhhhhhh");
+                countingProvider.countSymbols("hhhhhhhhhh");
 
         assertThat(actual, is(expected));
     }
 
     @Test
-    void ProvideCountingShouldReturnMapWhenGettingSentenceWithTwoWordWithOneRepeatedLetter() {
+    void provideCountingShouldReturnMapWhenGettingSentenceWithTwoWordWithOneRepeatedLetter() {
         Map<Character, Integer> expected = new HashMap<>();
         expected.put('h', 20);
         expected.put(' ', 1);
 
         Map<Character, Integer> actual =
-                countingProvider.provideCounting("hhhhhhhhhh hhhhhhhhhh");
+                countingProvider.countSymbols("hhhhhhhhhh hhhhhhhhhh");
 
         assertThat(actual, is(expected));
     }

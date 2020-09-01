@@ -8,11 +8,7 @@ import java.util.stream.Collectors;
 public class CountingProviderImpl implements CountingProvider {
 
     @Override
-    public Map<Character, Integer> provideCounting(String sentence) {
-        return countSymbols(sentence);
-    }
-
-    private Map<Character, Integer> countSymbols(String sentence) {
+    public Map<Character, Integer> countSymbols(String sentence) {
         return sentence.chars()
                 .mapToObj(symbol -> (char) symbol)
                 .collect(Collectors.toMap(Function.identity(),
@@ -20,4 +16,5 @@ public class CountingProviderImpl implements CountingProvider {
                         Integer::sum,
                         LinkedHashMap::new));
     }
+
 }

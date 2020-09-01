@@ -1,6 +1,6 @@
 package com.karachev.lettercounter;
 
-import com.karachev.lettercounter.domain.CacheProviderImpl;
+import com.karachev.lettercounter.domain.CacheProvider;
 import com.karachev.lettercounter.provider.CountingProvider;
 import com.karachev.lettercounter.provider.ViewProvider;
 import com.karachev.lettercounter.validator.Validator;
@@ -36,13 +36,13 @@ class SymbolCounterTest {
     private ViewProvider mockedViewProvider;
 
     @Mock
-    private CacheProviderImpl mockedCacheProviderImpl;
+    private CacheProvider mockedCacheProvider;
 
     @InjectMocks
     private SymbolCounter symbolCounter;
 
     @Test
-    void CountLettersShouldReturnStringOfASpecificFormatWhenCacheDoesNotHaveSentence() {
+    void сountLettersShouldReturnStringOfASpecificFormatWhenCacheDoesNotHaveSentence() {
         String sentence = "to be or not to be";
 
         Map<Character, Integer> lettersCountedInSentence = new LinkedHashMap<>();
@@ -63,22 +63,22 @@ class SymbolCounterTest {
                 "\"n\" - 1\r\n";
 
         doNothing().when(mockedValidator).validate(anyString());
-        when(mockedCacheProviderImpl.isValueContains(anyString())).thenReturn(false);
-        when(mockedCountingProvider.provideCounting(anyString()))
+        when(mockedCacheProvider.isValueContains(anyString())).thenReturn(false);
+        when(mockedCountingProvider.countSymbols(anyString()))
                 .thenReturn(lettersCountedInSentence);
         when(mockedViewProvider.provideView(anyMap())).thenReturn(view);
 
         symbolCounter.countSymbols(sentence);
 
         verify(mockedValidator).validate(anyString());
-        verify(mockedCacheProviderImpl).isValueContains(anyString());
-        verify(mockedCountingProvider).provideCounting(anyString());
+        verify(mockedCacheProvider).isValueContains(anyString());
+        verify(mockedCountingProvider).countSymbols(anyString());
         verify(mockedViewProvider).provideView(anyMap());
 
     }
 
     @Test
-    void CountLettersShouldNotUseCountingProviderPackageWhenGettingSameSentenceItShouldReadFromSentenceCache() {
+    void сountLettersShouldNotUseCountingProviderPackageWhenGettingSameSentenceItShouldReadFromSentenceCache() {
         String sentence = "to be or not to be";
 
         Map<Character, Integer> lettersCountedInSentence = new LinkedHashMap<>();
@@ -99,24 +99,24 @@ class SymbolCounterTest {
                 "\"n\" - 1\r\n";
 
         doNothing().when(mockedValidator).validate(anyString());
-        when(mockedCacheProviderImpl.isValueContains(anyString())).thenReturn(true);
-        when(mockedCacheProviderImpl.getLetterCounter(anyString())).thenReturn(lettersCountedInSentence);
+        when(mockedCacheProvider.isValueContains(anyString())).thenReturn(true);
+        when(mockedCacheProvider.getLetterCounter(anyString())).thenReturn(lettersCountedInSentence);
         when(mockedViewProvider.provideView(anyMap())).thenReturn(view);
 
         symbolCounter.countSymbols(sentence);
 
         verify(mockedValidator).validate(anyString());
-        verify(mockedCacheProviderImpl).isValueContains(anyString());
-        verify(mockedCacheProviderImpl).getLetterCounter(anyString());
+        verify(mockedCacheProvider).isValueContains(anyString());
+        verify(mockedCacheProvider).getLetterCounter(anyString());
         verifyZeroInteractions(mockedCountingProvider);
         verify(mockedViewProvider).provideView(anyMap());
     }
 
     @Test
-    void CountLettersShouldNotRunsWhenValidatorThrowsException() {
+    void сountLettersShouldNotRunsWhenValidatorThrowsException() {
         doThrow(new IllegalArgumentException()).when(mockedValidator).validate(anyString());
         assertThrows(IllegalArgumentException.class, () -> symbolCounter.countSymbols(""));
-        verifyNoMoreInteractions(mockedCacheProviderImpl, mockedCountingProvider,
+        verifyNoMoreInteractions(mockedCacheProvider, mockedCountingProvider,
                 mockedCountingProvider, mockedViewProvider);
     }
 
